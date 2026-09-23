@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- Fondo oscuro con bordes redondeados para que resalte en cualquier navegador -->
+  <rect width="512" height="512" rx="112" fill="#070709" />
+  <rect width="504" height="504" x="4" y="4" rx="108" stroke="rgba(255, 255, 255, 0.12)" stroke-width="8" />
+
+  <!-- Logo XENIT STUDIO centrado en blanco brillante -->
+  <g transform="translate(-14, -8) scale(0.54)">
+    <line x1="175" y1="618" x2="445" y2="195" stroke="#ffffff" stroke-width="26" stroke-linecap="round" />
+    <circle cx="456" cy="186" r="20" fill="#ffffff" />
+    <path d="M 215 414 L 275 414 L 345 556 L 285 556 Z" fill="#ffffff" />
+    <path d="M 320 414 L 380 414 L 240 556 L 180 556 Z" fill="#ffffff" />
+    <path d="M 378 414 H 460 V 440 H 408 V 472 H 455 V 498 H 408 V 530 H 460 V 556 H 378 Z" fill="#ffffff" />
+    <path d="M 488 414 H 518 L 575 508 V 414 H 605 V 556 H 575 L 518 462 V 556 H 488 Z" fill="#ffffff" />
+    <path d="M 650 414 H 680 V 556 H 650 Z" fill="#ffffff" />
+    <path d="M 700 414 H 810 V 442 H 770 V 556 H 740 V 442 H 700 Z" fill="#ffffff" />
+    <text x="492" y="658" font-family="system-ui, -apple-system, sans-serif" font-size="82" font-weight="800" letter-spacing="10" fill="#ffffff" text-anchor="middle">
+      STUDIO
+    </text>
+  </g>
+</svg>

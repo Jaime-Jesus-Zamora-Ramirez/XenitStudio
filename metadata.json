@@ -2,6 +2,7 @@
   "name": "XENIT STUDIO | Game Development Studio",
   "description": "Landing page minimalista y de alto impacto para XENIT STUDIO, desarrolladora de videojuegos y experiencias interactivas.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }
-

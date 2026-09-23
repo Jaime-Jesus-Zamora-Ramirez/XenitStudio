@@ -134,7 +134,6 @@ export const XenitLogo: React.FC<XenitLogoProps> = ({
             XENIT STUDIO
           </span>
         </div>
-        <p className="text-xs text-neutral-400">Next-Generation Game Development</p>
       </div>
     );
   }
