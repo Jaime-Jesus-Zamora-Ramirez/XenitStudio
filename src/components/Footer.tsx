@@ -17,10 +17,11 @@ export const Footer: React.FC = () => {
           <div className="flex flex-col items-center sm:items-start text-center sm:text-left space-y-1.5">
             <XenitLogo variant="footer" interactive={false} />
             <p className="text-xs text-neutral-400 max-w-sm">
-              Estudio independiente de desarrollo de videojuegos y experiencias interactivas.
+              Estudio independiente de desarrollo de videojuegos y experiencias impulsado por IA.
             </p>
           </div>
 
+          {/* Direct Links */}
           <button
             onClick={scrollToTop}
             className="flex items-center gap-1.5 text-neutral-400 hover:text-white transition-colors cursor-pointer text-xs"
