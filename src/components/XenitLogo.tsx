@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { sound } from './AudioController';
+import { AlienPeek } from './AlienPeek';
 
 interface XenitLogoProps {
   variant?: 'hero' | 'nav' | 'footer' | 'symbol';
@@ -170,11 +171,15 @@ export const XenitLogo: React.FC<XenitLogoProps> = ({
         />
       ))}
 
-      {/* Center SVG Logo */}
+      {/* Center Logo Container */}
       <div className="relative w-full max-w-[420px] md:max-w-[540px] aspect-square flex items-center justify-center">
+        {/* The Alien peaking from right behind the letters of XENIT and doing peace sign ✌️ */}
+        <AlienPeek />
+
+        {/* Center SVG Logo */}
         <svg
           viewBox="0 0 1000 1000"
-          className="w-full h-full text-white filter drop-shadow-[0_12px_36px_rgba(255,255,255,0.14)]"
+          className="relative z-20 w-full h-full text-white filter drop-shadow-[0_12px_36px_rgba(255,255,255,0.14)]"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >

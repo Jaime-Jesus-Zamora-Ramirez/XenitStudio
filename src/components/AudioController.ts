@@ -297,6 +297,35 @@ class FuturisticSoundSystem {
       // safe
     }
   }
+
+  public playAlienChirp() {
+    this.ensurePlaying();
+    try {
+      const ctx = this.getAudioContext();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = 'sine';
+      const now = ctx.currentTime;
+      // Friendly bubbling cosmic chirp (arpeggiated harmonics)
+      osc.frequency.setValueAtTime(587.33, now); // D5
+      osc.frequency.setValueAtTime(880, now + 0.08); // A5
+      osc.frequency.setValueAtTime(1174.66, now + 0.16); // D6
+      osc.frequency.exponentialRampToValueAtTime(1400, now + 0.32);
+
+      gain.gain.setValueAtTime(0.01, now);
+      gain.gain.linearRampToValueAtTime(0.1, now + 0.06);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+
+      osc.connect(gain);
+      gain.connect(this.sfxGain!);
+
+      osc.start(now);
+      osc.stop(now + 0.36);
+    } catch {
+      // safe
+    }
+  }
 }
 
 export const sound = new FuturisticSoundSystem();
