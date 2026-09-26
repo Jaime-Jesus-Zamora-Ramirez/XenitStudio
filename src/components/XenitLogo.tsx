@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { sound } from './AudioController';
 import { AlienPeek } from './AlienPeek';
 
@@ -17,6 +17,68 @@ export const XenitLogo: React.FC<XenitLogoProps> = ({
   const [sparks, setSparks] = useState<Array<{ id: number; x: number; y: number }>>([]);
   const containerRef = useRef<HTMLDivElement>(null);
   const [rotate, setRotate] = useState({ x: 0, y: 0 });
+  const [hasGyroscope, setHasGyroscope] = useState(false);
+
+  // Gyroscope / DeviceOrientation support for mobile devices
+  useEffect(() => {
+    if (variant !== 'hero' || !interactive) return;
+
+    let initialBeta: number | null = null;
+    let initialGamma: number | null = null;
+
+    const handleOrientation = (e: DeviceOrientationEvent) => {
+      if (e.beta === null || e.gamma === null) return;
+
+      // Mark gyroscope as active
+      setHasGyroscope(true);
+
+      // Calibrate reference resting position (typically holding phone around ~45 deg pitch)
+      if (initialBeta === null) {
+        initialBeta = e.beta;
+        initialGamma = e.gamma;
+      }
+
+      // Calculate deltas relative to calibrated holding position
+      const deltaBeta = e.beta - initialBeta; // forward/backward tilt
+      const deltaGamma = e.gamma - initialGamma; // left/right tilt
+
+      // Clamp between -20 and 20 degrees for pleasant 3D parallax
+      const clampedX = Math.max(-18, Math.min(18, -deltaBeta * 0.9));
+      const clampedY = Math.max(-18, Math.min(18, deltaGamma * 0.9));
+
+      setRotate({
+        x: clampedX,
+        y: clampedY,
+      });
+    };
+
+    // Request permission if needed on iOS 13+ devices on first interaction
+    const initOrientation = () => {
+      if (
+        typeof DeviceOrientationEvent !== 'undefined' &&
+        typeof (DeviceOrientationEvent as any).requestPermission === 'function'
+      ) {
+        (DeviceOrientationEvent as any)
+          .requestPermission()
+          .then((permissionState: string) => {
+            if (permissionState === 'granted') {
+              window.addEventListener('deviceorientation', handleOrientation);
+            }
+          })
+          .catch(() => {});
+      } else if (typeof window !== 'undefined' && 'DeviceOrientationEvent' in window) {
+        window.addEventListener('deviceorientation', handleOrientation);
+      }
+    };
+
+    initOrientation();
+    window.addEventListener('touchstart', initOrientation, { once: true });
+
+    return () => {
+      window.removeEventListener('deviceorientation', handleOrientation);
+      window.removeEventListener('touchstart', initOrientation);
+    };
+  }, [variant, interactive]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (variant !== 'hero' || !interactive) return;
@@ -31,9 +93,32 @@ export const XenitLogo: React.FC<XenitLogoProps> = ({
     });
   };
 
+  // Touch move support as smooth fallback or immediate interactive gesture on mobile
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (variant !== 'hero' || !interactive) return;
+    const touch = e.touches[0];
+    if (!touch) return;
+    const rect = containerRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const x = touch.clientX - rect.left - rect.width / 2;
+    const y = touch.clientY - rect.top - rect.height / 2;
+    setRotate({
+      x: -(y / (rect.height / 2)) * 14,
+      y: (x / (rect.width / 2)) * 16,
+    });
+  };
+
+  const handleTouchEnd = () => {
+    if (!hasGyroscope) {
+      setRotate({ x: 0, y: 0 });
+    }
+  };
+
   const handleMouseLeave = () => {
     setIsHovered(false);
-    setRotate({ x: 0, y: 0 });
+    if (!hasGyroscope) {
+      setRotate({ x: 0, y: 0 });
+    }
   };
 
   const handleMouseEnter = () => {
@@ -147,13 +232,18 @@ export const XenitLogo: React.FC<XenitLogoProps> = ({
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
       onClick={handleClick}
       style={{
         transform: `perspective(1000px) rotateX(${rotate.x}deg) rotateY(${rotate.y}deg)`,
-        transition: isHovered ? 'transform 0.1s ease-out' : 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+        transition:
+          isHovered || hasGyroscope
+            ? 'transform 0.15s ease-out'
+            : 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
       }}
       className={`relative select-none cursor-pointer flex flex-col items-center justify-center py-6 px-4 md:px-12 ${className}`}
-      title="Toca para interactuar con la energía de XENIT"
+      title="Interactúa con la energía 3D de XENIT (Mouse, Giroscopio o Táctil)"
     >
       {/* Dynamic Ambient Backlight Glow */}
       <div

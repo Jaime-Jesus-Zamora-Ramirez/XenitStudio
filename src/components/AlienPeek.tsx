@@ -16,12 +16,11 @@ export const AlienPeek: React.FC<AlienPeekProps> = ({ onPeek, className = '' }) 
   // 5. 'hiding': swiftly glides back behind the letters of the logo into complete hiding
   const [phase, setPhase] = useState<'hidden' | 'peeking' | 'peace' | 'waving_bye' | 'hiding'>('hidden');
   const [blink, setBlink] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
 
-  // Responsive screen detection: on mobile (< 640px), peek directly over the top of the letters
   useEffect(() => {
     const checkScreen = () => {
-      setIsMobile(window.innerWidth < 640);
+      setIsDesktop(window.innerWidth >= 640);
     };
     checkScreen();
     window.addEventListener('resize', checkScreen);
@@ -57,7 +56,7 @@ export const AlienPeek: React.FC<AlienPeekProps> = ({ onPeek, className = '' }) 
   const triggerPeekSequence = () => {
     if (phase !== 'hidden') return;
 
-    // 1. Emerges outwards
+    // 1. Emerges into position
     setPhase('peeking');
     sound.playAlienChirp();
     if (onPeek) onPeek();
@@ -67,20 +66,20 @@ export const AlienPeek: React.FC<AlienPeekProps> = ({ onPeek, className = '' }) 
       setPhase('peace');
     }, 650);
 
-    // 3. Cute goodbye transition: Alien gives a brief wave / farewell before hiding
+    // 3. Cute goodbye transition: Alien waves farewell in place
     const tBye = setTimeout(() => {
       setPhase('waving_bye');
     }, 5600);
 
-    // 4. Swift duck back behind the logo
+    // 4. Fades out smoothly right where it stands (without moving or diving behind letters)
     const tHiding = setTimeout(() => {
       setPhase('hiding');
-    }, 6300);
+    }, 6400);
 
-    // 5. Completely hidden
+    // 5. Completely hidden / reset
     const tHidden = setTimeout(() => {
       setPhase('hidden');
-    }, 7050);
+    }, 7300);
 
     return () => {
       clearTimeout(tPeace);
@@ -123,31 +122,18 @@ export const AlienPeek: React.FC<AlienPeekProps> = ({ onPeek, className = '' }) 
       }}
       className={`absolute z-10 select-none cursor-pointer group ${className}`}
       style={{
-        // Adaptive positioning:
-        // On mobile (<640px): Above the letters of XENIT, shifted towards the right side (over the 'I' / 'T' area)
-        // On desktop/tablet (>=640px): Placed on the right flank, popping out sideways
-        ...(isMobile
-          ? {
-              left: '68%',
-              top: '22%',
-              transform: isOut
-                ? 'translateX(-30%) translateY(-54px) rotate(4deg) scale(0.95)'
-                : 'translateX(-30%) translateY(32px) rotate(-4deg) scale(0.6)',
-              right: 'auto',
-            }
-          : {
-              right: '-10%',
-              top: '32%',
-              transform: isOut
-                ? 'translateX(55px) translateY(-5px) rotate(6deg) scale(1)'
-                : 'translateX(-38px) translateY(16px) rotate(-12deg) scale(0.55)',
-              left: 'auto',
-            }),
-        // Stays fully opaque while retreating smoothly behind the letters, only fading at the very final tuck
-        opacity: phase === 'hidden' ? 0 : 1,
+        // Positioned flush along the upper rim of the letters of XENIT (above 'I' and 'T')
+        // In desktop screens, raised higher (top: 3%) so it clears the letters with plenty of room; in mobile at 12%
+        left: '72%',
+        top: isDesktop ? '3%' : '12%',
+        transform: isVisible
+          ? 'translateX(-50%) translateY(0px) rotate(2deg) scale(0.85)'
+          : 'translateX(-50%) translateY(40px) rotate(-4deg) scale(0.55)',
+        // Fades smoothly right where it stands without moving or hiding behind letters
+        opacity: phase === 'hiding' || phase === 'hidden' ? 0 : 1,
         transition:
           phase === 'hiding'
-            ? 'transform 0.72s cubic-bezier(0.5, 0, 0.2, 1), opacity 0.5s ease-in 0.22s'
+            ? 'opacity 0.85s ease-out'
             : 'transform 0.7s cubic-bezier(0.34, 1.45, 0.64, 1), opacity 0.35s ease-out',
         pointerEvents: phase === 'hidden' ? 'none' : 'auto',
       }}
@@ -174,7 +160,7 @@ export const AlienPeek: React.FC<AlienPeekProps> = ({ onPeek, className = '' }) 
               }
             : { y: 0, rotate: 0 }
         }
-        className="relative w-24 h-32 sm:w-28 sm:h-40 md:w-32 md:h-44 filter drop-shadow-[0_8px_24px_rgba(74,222,128,0.45)]"
+        className="relative w-20 h-28 sm:w-22 sm:h-30 md:w-24 md:h-32 filter drop-shadow-[0_8px_20px_rgba(74,222,128,0.45)]"
       >
         {/* Soft cosmic glow aura - smoothly fades out with AnimatePresence */}
         <AnimatePresence>
@@ -581,21 +567,6 @@ export const AlienPeek: React.FC<AlienPeekProps> = ({ onPeek, className = '' }) 
             )}
           </motion.g>
         </svg>
-
-        {/* Floating Peace badge with bounce and smooth exit */}
-        <AnimatePresence>
-          {isPeace && (
-            <motion.div
-              initial={{ opacity: 0, y: 5, scale: 0.85 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -6, scale: 0.8, transition: { duration: 0.25 } }}
-              className="absolute -top-7 left-1/2 -translate-x-1/2 bg-black/95 border-2 border-lime-400 font-mono text-[10px] text-lime-300 px-2.5 py-0.5 shadow-[0_0_15px_rgba(143,252,40,0.6)] flex items-center gap-1.5 whitespace-nowrap rounded-sm"
-            >
-              <span>✌️</span>
-              <span className="font-black tracking-wider uppercase">¡HOLA GAMERS!</span>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </motion.div>
     </div>
   );
