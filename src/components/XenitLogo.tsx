@@ -23,10 +23,10 @@ export const XenitLogo: React.FC<XenitLogoProps> = ({
     if (!rect) return;
     const x = e.clientX - rect.left - rect.width / 2;
     const y = e.clientY - rect.top - rect.height / 2;
-    // Gentle 3D tilt
+    // 3D tilt
     setRotate({
-      x: -(y / (rect.height / 2)) * 12,
-      y: (x / (rect.width / 2)) * 14,
+      x: -(y / (rect.height / 2)) * 14,
+      y: (x / (rect.width / 2)) * 16,
     });
   };
 
@@ -50,15 +50,15 @@ export const XenitLogo: React.FC<XenitLogoProps> = ({
     const clickX = e.clientX - rect.left;
     const clickY = e.clientY - rect.top;
 
-    const newSparks = Array.from({ length: 6 }).map((_, i) => ({
+    const newSparks = Array.from({ length: 8 }).map((_, i) => ({
       id: Date.now() + i,
-      x: clickX + (Math.random() - 0.5) * 40,
-      y: clickY + (Math.random() - 0.5) * 40,
+      x: clickX + (Math.random() - 0.5) * 50,
+      y: clickY + (Math.random() - 0.5) * 50,
     }));
     setSparks((prev) => [...prev, ...newSparks]);
     setTimeout(() => {
       setSparks((prev) => prev.filter((s) => !newSparks.some((ns) => ns.id === s.id)));
-    }, 800);
+    }, 600);
   };
 
   if (variant === 'nav') {
@@ -74,21 +74,23 @@ export const XenitLogo: React.FC<XenitLogoProps> = ({
           xmlns="http://www.w3.org/2000/svg"
           aria-hidden="true"
         >
-          {/* Diagonal Ray */}
+          {/* Extended Continuous Thin Diagonal Stroke forming the X left branch */}
           <line
-            x1="175"
-            y1="618"
+            x1="180"
+            y1="614"
             x2="445"
-            y2="195"
+            y2="190"
             stroke="currentColor"
-            strokeWidth="20"
+            strokeWidth="18"
             strokeLinecap="round"
             className="text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]"
           />
+          {/* Apex Zenith Star / Dot */}
           <circle cx="456" cy="186" r="14" fill="currentColor" />
-          {/* X */}
+
+          {/* Thick Down-Right Slash of the X */}
           <path d="M 215 414 L 275 414 L 345 556 L 285 556 Z" fill="currentColor" />
-          <path d="M 320 414 L 380 414 L 240 556 L 180 556 Z" fill="currentColor" />
+
           {/* E */}
           <path d="M 378 414 H 460 V 440 H 408 V 472 H 455 V 498 H 408 V 530 H 460 V 556 H 378 Z" fill="currentColor" />
           {/* N */}
@@ -121,10 +123,9 @@ export const XenitLogo: React.FC<XenitLogoProps> = ({
             xmlns="http://www.w3.org/2000/svg"
             aria-hidden="true"
           >
-            <line x1="175" y1="618" x2="445" y2="195" stroke="currentColor" strokeWidth="18" strokeLinecap="round" />
+            <line x1="180" y1="614" x2="445" y2="190" stroke="currentColor" strokeWidth="16" strokeLinecap="round" />
             <circle cx="456" cy="186" r="12" fill="currentColor" />
             <path d="M 215 414 L 275 414 L 345 556 L 285 556 Z" fill="currentColor" />
-            <path d="M 320 414 L 380 414 L 240 556 L 180 556 Z" fill="currentColor" />
             <path d="M 378 414 H 460 V 440 H 408 V 472 H 455 V 498 H 408 V 530 H 460 V 556 H 378 Z" fill="currentColor" />
             <path d="M 488 414 H 518 L 575 508 V 414 H 605 V 556 H 575 L 518 462 V 556 H 488 Z" fill="currentColor" />
             <path d="M 650 414 H 680 V 556 H 650 Z" fill="currentColor" />
@@ -155,8 +156,8 @@ export const XenitLogo: React.FC<XenitLogoProps> = ({
     >
       {/* Dynamic Ambient Backlight Glow */}
       <div
-        className={`absolute -inset-8 -z-10 rounded-full bg-gradient-to-r from-neutral-800/40 via-white/10 to-neutral-800/40 blur-3xl transition-opacity duration-700 ${
-          isHovered ? 'opacity-90 scale-105' : 'opacity-40'
+        className={`absolute -inset-8 -z-10 rounded-full bg-gradient-to-r from-neutral-800/40 via-white/15 to-neutral-800/40 blur-3xl transition-opacity duration-700 ${
+          isHovered ? 'opacity-100 scale-110' : 'opacity-40'
         }`}
       />
 
@@ -165,7 +166,7 @@ export const XenitLogo: React.FC<XenitLogoProps> = ({
         <span
           key={spark.id}
           style={{ left: spark.x, top: spark.y }}
-          className="pointer-events-none absolute h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white shadow-[0_0_12px_#ffffff] animate-ping"
+          className="pointer-events-none absolute h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white shadow-[0_0_14px_#ffffff] animate-ping"
         />
       ))}
 
@@ -173,14 +174,14 @@ export const XenitLogo: React.FC<XenitLogoProps> = ({
       <div className="relative w-full max-w-[420px] md:max-w-[540px] aspect-square flex items-center justify-center">
         <svg
           viewBox="0 0 1000 1000"
-          className="w-full h-full text-white filter drop-shadow-[0_12px_36px_rgba(255,255,255,0.12)]"
+          className="w-full h-full text-white filter drop-shadow-[0_12px_36px_rgba(255,255,255,0.14)]"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
           <defs>
             {/* Dynamic laser beam gradient */}
-            <linearGradient id="laserBeam" x1="175" y1="618" x2="445" y2="195" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.2" />
+            <linearGradient id="laserBeam" x1="180" y1="614" x2="445" y2="190" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.4" />
               <stop offset="50%" stopColor="#ffffff" stopOpacity="1" />
               <stop offset="100%" stopColor="#ffffff" stopOpacity="0.9" />
             </linearGradient>
@@ -193,64 +194,56 @@ export const XenitLogo: React.FC<XenitLogoProps> = ({
 
           {/* Background subtle diagonal guide line */}
           <line
-            x1="175"
-            y1="618"
+            x1="180"
+            y1="614"
             x2="445"
-            y2="195"
-            stroke="rgba(255, 255, 255, 0.25)"
+            y2="190"
+            stroke="rgba(255, 255, 255, 0.3)"
             strokeWidth="8"
             strokeLinecap="round"
           />
 
-          {/* Animated Kinetic Ray (The Laser Slicing the X) */}
+          {/* THE INTEGRATED LINE WITH ANIMATED KINETIC LASER RAY EFFECT:
+              It is the unified stroke of the letter X, pulsing with the signature energy beam. */}
           <line
-            x1="175"
-            y1="618"
+            x1="180"
+            y1="614"
             x2="445"
-            y2="195"
+            y2="190"
             stroke="url(#laserBeam)"
-            strokeWidth={isHovered ? '14' : '9'}
+            strokeWidth={isHovered ? '15' : '10'}
             strokeLinecap="round"
             className="transition-all duration-300 animate-ray-pulse"
             filter="url(#zenithGlow)"
           />
 
-          {/* Apex Zenith Star / Dot */}
+          {/* Apex Zenith Star / Dot with glow & hover response */}
           <circle
             cx="456"
             cy="186"
-            r={isHovered ? '11' : '8'}
+            r={isHovered ? '10' : '7.5'}
             fill="#ffffff"
             filter="url(#zenithGlow)"
             className="transition-all duration-300"
           />
-          {/* Subtle pulse ring around apex dot */}
+          {/* Pulsing ring aura around apex dot */}
           <circle
             cx="456"
             cy="186"
-            r={isHovered ? '22' : '15'}
-            stroke="rgba(255, 255, 255, 0.4)"
+            r={isHovered ? '24' : '16'}
+            stroke="rgba(255, 255, 255, 0.45)"
             strokeWidth="1.5"
             fill="none"
             className="animate-ping"
             style={{ animationDuration: '3s' }}
           />
 
-          {/* Letter X (Forward & Backward Slashes) */}
-          <g className="transition-transform duration-300">
-            {/* Slash 1 */}
-            <path
-              d="M 215 414 L 275 414 L 345 556 L 285 556 Z"
-              fill="#ffffff"
-              className="drop-shadow-sm"
-            />
-            {/* Slash 2 */}
-            <path
-              d="M 320 414 L 380 414 L 240 556 L 180 556 Z"
-              fill="#ffffff"
-              className="drop-shadow-sm"
-            />
-          </g>
+          {/* Letter X: The bold down-right bar crossed by the laser line */}
+          <path
+            d="M 215 414 L 275 414 L 345 556 L 285 556 Z"
+            fill="#ffffff"
+            className="drop-shadow-sm transition-transform duration-300"
+          />
 
           {/* Letter E */}
           <path
@@ -280,13 +273,13 @@ export const XenitLogo: React.FC<XenitLogoProps> = ({
           <text
             x="492"
             y="650"
-            fontFamily="'Plus Jakarta Sans', sans-serif"
-            fontSize="78"
-            fontWeight="700"
-            letterSpacing="6"
+            fontFamily="'Plus Jakarta Sans', -apple-system, sans-serif"
+            fontSize="88"
+            fontWeight="800"
+            letterSpacing="8"
             fill="#ffffff"
             className="transition-opacity duration-300"
-            opacity={isHovered ? 1 : 0.9}
+            opacity={isHovered ? 1 : 0.95}
           >
             STUDIO
           </text>

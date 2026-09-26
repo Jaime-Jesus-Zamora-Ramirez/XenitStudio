@@ -1,11 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" fill="none" role="img" aria-label="XENIT STUDIO Logo">
-  <!-- Dynamic Slash Ray & Apex Dot -->
-  <line x1="175" y1="618" x2="445" y2="195" stroke="currentColor" stroke-width="14" stroke-linecap="round" />
+  <!-- Extended Continuous Diagonal Line (Integrated with the letter X) -->
+  <line x1="180" y1="614" x2="445" y2="190" stroke="currentColor" stroke-width="14" stroke-linecap="round" />
   <circle cx="456" cy="186" r="8" fill="currentColor" />
 
-  <!-- Letter X -->
+  <!-- Letter X: Bold Down-Right Stroke -->
   <path d="M 215 414 L 275 414 L 345 556 L 285 556 Z" fill="currentColor" />
-  <path d="M 320 414 L 380 414 L 240 556 L 180 556 Z" fill="currentColor" />
 
   <!-- Letter E -->
   <path d="M 378 414 H 460 V 440 H 408 V 472 H 455 V 498 H 408 V 530 H 460 V 556 H 378 Z" fill="currentColor" />
@@ -20,7 +19,7 @@
   <path d="M 700 414 H 810 V 442 H 770 V 556 H 740 V 442 H 700 Z" fill="currentColor" />
 
   <!-- STUDIO Text -->
-  <text x="492" y="650" font-family="'Plus Jakarta Sans', 'Arial', sans-serif" font-size="78" font-weight="700" letter-spacing="4" fill="currentColor">
+  <text x="492" y="650" font-family="'Plus Jakarta Sans', -apple-system, sans-serif" font-size="88" font-weight="800" letter-spacing="8" fill="currentColor">
     STUDIO
   </text>
 </svg>
