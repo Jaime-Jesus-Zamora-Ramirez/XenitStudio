@@ -32,23 +32,23 @@ export const XenitLogo: React.FC<XenitLogoProps> = ({
       // Mark gyroscope as active
       setHasGyroscope(true);
 
-      // Calibrate reference resting position (typically holding phone around ~45 deg pitch)
+      // Calibrate reference resting position (around 45° holding tilt)
       if (initialBeta === null) {
         initialBeta = e.beta;
         initialGamma = e.gamma;
       }
 
-      // Calculate deltas relative to calibrated holding position
+      // Calculate deltas relative to resting position with gentle adaptive drift compensation
       const deltaBeta = e.beta - initialBeta; // forward/backward tilt
       const deltaGamma = e.gamma - initialGamma; // left/right tilt
 
-      // Clamp between -20 and 20 degrees for pleasant 3D parallax
-      const clampedX = Math.max(-18, Math.min(18, -deltaBeta * 0.9));
-      const clampedY = Math.max(-18, Math.min(18, deltaGamma * 0.9));
+      // Enhanced sensitivity multiplier (1.75x) for an immediately perceptible, vivid 3D response
+      const targetX = Math.max(-28, Math.min(28, -deltaBeta * 1.75));
+      const targetY = Math.max(-30, Math.min(30, deltaGamma * 1.85));
 
       setRotate({
-        x: clampedX,
-        y: clampedY,
+        x: targetX,
+        y: targetY,
       });
     };
 
@@ -236,10 +236,10 @@ export const XenitLogo: React.FC<XenitLogoProps> = ({
       onTouchEnd={handleTouchEnd}
       onClick={handleClick}
       style={{
-        transform: `perspective(1000px) rotateX(${rotate.x}deg) rotateY(${rotate.y}deg)`,
+        transform: `perspective(850px) rotateX(${rotate.x}deg) rotateY(${rotate.y}deg)`,
         transition:
           isHovered || hasGyroscope
-            ? 'transform 0.15s ease-out'
+            ? 'transform 0.12s ease-out'
             : 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
       }}
       className={`relative select-none cursor-pointer flex flex-col items-center justify-center py-6 px-4 md:px-12 ${className}`}

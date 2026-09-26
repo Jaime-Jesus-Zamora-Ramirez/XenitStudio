@@ -31,6 +31,68 @@ class FuturisticSoundSystem {
       window.addEventListener('keydown', startOnInteraction, { passive: true });
       window.addEventListener('mousemove', startOnInteraction, { once: true, passive: true });
       window.addEventListener('scroll', startOnInteraction, { once: true, passive: true });
+
+      // Automatically mute / pause music when leaving the browser, switching tabs, or minimizing window
+      const handleVisibilityChange = () => {
+        if (document.hidden) {
+          this.pauseOnLeave();
+        } else {
+          this.resumeOnReturn();
+        }
+      };
+
+      const handleWindowBlur = () => {
+        this.pauseOnLeave();
+      };
+
+      const handleWindowFocus = () => {
+        if (!document.hidden) {
+          this.resumeOnReturn();
+        }
+      };
+
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+      window.addEventListener('pagehide', handleWindowBlur);
+      window.addEventListener('blur', handleWindowBlur);
+      window.addEventListener('focus', handleWindowFocus);
+    }
+  }
+
+  /**
+   * Smoothly mutes / suspends audio playback when user leaves the tab or browser
+   */
+  public pauseOnLeave() {
+    if (!this.ctx) return;
+    try {
+      if (this.masterGain) {
+        // Ramp down master volume quickly and cleanly without clicks
+        this.masterGain.gain.setValueAtTime(this.masterGain.gain.value, this.ctx.currentTime);
+        this.masterGain.gain.linearRampToValueAtTime(0.0001, this.ctx.currentTime + 0.12);
+      }
+      setTimeout(() => {
+        if (this.ctx && (document.hidden || !document.hasFocus())) {
+          this.ctx.suspend().catch(() => {});
+        }
+      }, 130);
+    } catch {
+      // safe fallback
+    }
+  }
+
+  /**
+   * Smoothly restores audio playback and ramps volume back up when returning to XENIT
+   */
+  public resumeOnReturn() {
+    if (!this.ctx || !this.isMusicPlaying) return;
+    try {
+      this.ctx.resume().then(() => {
+        if (this.masterGain && this.ctx) {
+          this.masterGain.gain.setValueAtTime(0.0001, this.ctx.currentTime);
+          this.masterGain.gain.linearRampToValueAtTime(1, this.ctx.currentTime + 0.35);
+        }
+      }).catch(() => {});
+    } catch {
+      // safe fallback
     }
   }
 
